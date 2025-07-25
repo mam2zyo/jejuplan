@@ -11,11 +11,8 @@ import net.codecraft.jejutrip.account.user.service.UserService;
 import net.codecraft.jejutrip.common.response.ResponseCode;
 import net.codecraft.jejutrip.common.response.ResponseMessage;
 import net.codecraft.jejutrip.security.jwt.repository.RefreshTokenRepository;
-import net.codecraft.jejutrip.security.jwt.service.JwtService;
 import net.codecraft.jejutrip.security.jwt.support.CookieSupport;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.security.auth.login.AccountException;
@@ -66,13 +63,13 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @PatchMapping("/password")
+    @PatchMapping("/users/me/password")
     public ResponseEntity modifyPassword(@RequestBody PasswordRequest request) {
         userService.modifyPassword(request);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping(value = "/users")
+    @DeleteMapping(value = "/users/me")
     public ResponseEntity deleteUser(@CookieValue String accessToken , HttpServletResponse response) {
         userService.removeUser(accessToken , response);
         return ResponseEntity.noContent().build();
