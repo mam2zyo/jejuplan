@@ -12,11 +12,15 @@ import net.codecraft.jejutrip.common.response.ResponseCode;
 import net.codecraft.jejutrip.common.response.ResponseMessage;
 import net.codecraft.jejutrip.security.jwt.repository.RefreshTokenRepository;
 import net.codecraft.jejutrip.security.jwt.support.CookieSupport;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.web.bind.annotation.*;
 
 import javax.security.auth.login.AccountException;
 import java.io.IOException;
+import java.security.Principal;
 
 @Slf4j
 @RestController
@@ -63,10 +67,12 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @PatchMapping("/users/me/password")
-    public ResponseEntity modifyPassword(@RequestBody PasswordRequest request) {
-        userService.modifyPassword(request);
-        return ResponseEntity.ok().build();
+    @GetMapping("/users/me")
+    public ResponseEntity<String> getMyInfo(Principal principal) {
+        if (principal == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not Logged In");
+        }
+        return ResponseEntity.ok("로그인된 사용자: " + principal.getName());
     }
 
     @DeleteMapping(value = "/users/me")
@@ -74,6 +80,14 @@ public class UserController {
         userService.removeUser(accessToken , response);
         return ResponseEntity.noContent().build();
     }
+
+
+    @PatchMapping("/users/me/password")
+    public ResponseEntity modifyPassword(@RequestBody PasswordRequest request) {
+        userService.modifyPassword(request);
+        return ResponseEntity.ok().build();
+    }
+
 
     @GetMapping(value = "/users/{email}")
     public ResponseEntity<ResponseMessage> isExistAccount(@PathVariable String email) {

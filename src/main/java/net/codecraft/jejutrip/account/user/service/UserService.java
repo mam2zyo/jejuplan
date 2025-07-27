@@ -114,8 +114,6 @@ public class UserService {
         }
     }
 
-
-
     public User findUserByAccessToken(String accessToken) {
         String email = jwtTokenProvider.getUserPk(accessToken);
         return findUserByEmail(email);

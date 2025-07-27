@@ -36,6 +36,8 @@ out/
 ### VS Code ###
 .vscode/
 
+jejutrip-front/
+
 *.log
 logs/a
 application.yml

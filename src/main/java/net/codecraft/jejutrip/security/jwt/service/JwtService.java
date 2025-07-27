@@ -55,7 +55,6 @@ public class JwtService {
 //    }
 
 
-
     public RefreshToken getRefreshToken(HttpServletRequest request) {
         String refreshToken = getRefreshTokenFromHeader(request);
 

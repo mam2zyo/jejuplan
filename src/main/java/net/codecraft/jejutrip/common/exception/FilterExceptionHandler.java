@@ -6,6 +6,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import net.codecraft.jejutrip.common.response.ResponseCode;
 import net.codecraft.jejutrip.common.response.ResponseMessage;
 import net.codecraft.jejutrip.security.exception.TokenForgeryException;
@@ -13,13 +14,16 @@ import net.codecraft.jejutrip.security.jwt.support.CookieSupport;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
 
 import java.io.IOException;
 
+@Component
+@RequiredArgsConstructor
 public class FilterExceptionHandler extends GenericFilterBean {
 
-    private final CookieSupport cookieSupport = new CookieSupport();
+    private final CookieSupport cookieSupport;
 
     @Override
     public void doFilter(ServletRequest request,

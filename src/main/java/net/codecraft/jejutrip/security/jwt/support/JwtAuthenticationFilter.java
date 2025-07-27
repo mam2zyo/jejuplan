@@ -31,10 +31,11 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     private final JwtService jwtService;
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+            throws IOException, ServletException {
+
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         String requestUri = httpServletRequest.getRequestURI();
-        log.info("Request URI in JwtAuthenticationFilter: {}", requestUri);
 
         // [수정] 로그아웃 경로인 경우, 필터의 나머지 로직을 건너뛰고 바로 다음으로 넘김
         if (requestUri.equals("/api/auth/logout")) {
@@ -50,7 +51,6 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
         } else if (token != null) {
             jwtService.validateRefreshToken((HttpServletRequest) request , (HttpServletResponse) response);
-
             setSuccessResponse(((HttpServletResponse) response) , ResponseCode.CREATE_ACCESS_TOKEN);
             return;
         }
