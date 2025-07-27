@@ -39,5 +39,5 @@ out/
 jejutrip-front/
 
 *.log
-logs/a
+logs/
 application.yml

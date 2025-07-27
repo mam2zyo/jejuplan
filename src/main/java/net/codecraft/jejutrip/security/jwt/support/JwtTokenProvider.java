@@ -51,12 +51,30 @@ public class JwtTokenProvider {
                 .build();
     }
 
+    public boolean validateAccessToken(String jwtToken) {
+        try {
+            Jws<Claims> claims = Jwts.parser()
+                    .verifyWith(secretKey)
+                    .build()
+                    .parseSignedClaims(jwtToken);
+
+            return !claims.getPayload()
+                    .getExpiration()
+                    .before(new Date());
+
+        } catch (ExpiredJwtException e) {
+            return false;
+        } catch (JwtException e) {
+            throw new TokenForgeryException("알 수 없는 토큰이거나 , 변조되었습니다.");
+        }
+    }
+
     public String validateRefreshToken(RefreshToken refreshToken) {
         String token = refreshToken.getToken();
 
         try {
             Jws<Claims> claims = Jwts.parser()
-                    .verifyWith(secretKey)  // setSigningKey -> verifyWith
+                    .verifyWith(secretKey)      // setSigningKey -> verifyWith
                     .build()
                     .parseSignedClaims(token);  // parseClaimsJws -> parseSignedClaims
 
@@ -67,7 +85,6 @@ public class JwtTokenProvider {
         } catch (JwtException e) {
             return null;
         }
-
         return null;
     }
 
@@ -94,20 +111,7 @@ public class JwtTokenProvider {
         }
     }
 
-    public boolean validateAccessToken(String jwtToken) {
-        try {
-            Jws<Claims> claims = Jwts.parser()
-                    .verifyWith(secretKey)
-                    .build()
-                    .parseSignedClaims(jwtToken);
 
-            return !claims.getPayload().getExpiration().before(new Date());
-        } catch (ExpiredJwtException e) {
-            return false;
-        } catch (JwtException e) {
-            throw new TokenForgeryException("알 수 없는 토큰이거나 , 변조되었습니다.");
-        }
-    }
 
     private String createAccessToken(String subject, UserRole roles) {
         Date now = new Date();
@@ -115,7 +119,7 @@ public class JwtTokenProvider {
 
         return Jwts.builder()
                 .subject(subject)                // setSubject -> subject
-                .claim("roles", roles)        // setClaims + claims.put -> claim
+                .claim("roles", roles)         // setClaims + claims.put -> claim
                 .issuedAt(now)                   // setIssuedAt -> issuedAt
                 .expiration(expiration)          // setExpiration -> expiration
                 .signWith(secretKey)             // signWith(SignatureAlgorithm.HS256, key) -> signWith(key)

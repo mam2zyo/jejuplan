@@ -37,12 +37,6 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         String requestUri = httpServletRequest.getRequestURI();
 
-        // [수정] 로그아웃 경로인 경우, 필터의 나머지 로직을 건너뛰고 바로 다음으로 넘김
-        if (requestUri.equals("/api/auth/logout")) {
-            chain.doFilter(request, response);
-            return;
-        }
-
         String token = getAccessTokenFromHeader(request);
 
         if (token != null && jwtTokenProvider.validateAccessToken(token)) {
@@ -52,21 +46,23 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         } else if (token != null) {
             jwtService.validateRefreshToken((HttpServletRequest) request , (HttpServletResponse) response);
             setSuccessResponse(((HttpServletResponse) response) , ResponseCode.CREATE_ACCESS_TOKEN);
+            chain.doFilter(request, response);
             return;
         }
-
         chain.doFilter(request, response);
     }
+
 
     public String getAccessTokenFromHeader(ServletRequest request) {
         Cookie[] cookies = ((HttpServletRequest) request).getCookies();
 
         if (cookies != null && cookies.length != 0) {
             return Arrays.stream(cookies)
-                    .filter(c -> c.getName().equals("accessToken")).findFirst().map(Cookie::getValue)
+                    .filter(c -> c.getName().equals("accessToken"))
+                    .findFirst()
+                    .map(Cookie::getValue)
                     .orElse(null);
         }
-
         return null;
     }
 }

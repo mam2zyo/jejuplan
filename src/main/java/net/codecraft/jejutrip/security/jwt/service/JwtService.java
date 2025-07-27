@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 
-import static net.codecraft.jejutrip.security.jwt.domain.RefreshToken.creareRefreshToken;
+import static net.codecraft.jejutrip.security.jwt.domain.RefreshToken.createRefreshToken;
 
 @Slf4j
 @Service
@@ -32,7 +32,7 @@ public class JwtService {
 
     @Transactional
     public void login(Token token) {
-        RefreshToken refreshToken = creareRefreshToken(token);
+        RefreshToken refreshToken = createRefreshToken(token);
         String loginUserEmail = refreshToken.getKeyEmail();
 
         refreshTokenRepository.existsByKeyEmail(loginUserEmail).ifPresent(a -> {
@@ -72,20 +72,20 @@ public class JwtService {
             return ResponseMessage.of(ResponseCode.CREATE_ACCESS_TOKEN);
         } catch (NoSuchElementException e) {
             cookieSupport.deleteJwtTokenInCookie(response);
-
             throw new TokenForgeryException("변조된 RefreshToken 입니다.");
         }
     }
 
     public String getRefreshTokenFromHeader(HttpServletRequest request) {
-        Cookie cookies[] = request.getCookies();
+        Cookie[] cookies = request.getCookies();
 
         if (cookies != null && cookies.length != 0) {
             return Arrays.stream(cookies)
-                    .filter(c -> c.getName().equals("refreshToken")).findFirst().map(Cookie::getValue)
+                    .filter(c -> c.getName().equals("refreshToken"))
+                    .findFirst()
+                    .map(Cookie::getValue)
                     .orElseThrow(() -> new SecurityException("인증되지 않은 사용자입니다."));
         }
-
         throw new SecurityException("인증되지 않은 사용자입니다.");
     }
 }

@@ -33,7 +33,7 @@ public class RefreshToken {
                 .build();
     }
 
-    public static RefreshToken creareRefreshToken(Token token) {
+    public static RefreshToken createRefreshToken(Token token) {
         return RefreshToken.builder()
                 .keyEmail(token.getKey())
                 .token(token.getRefreshToken())
