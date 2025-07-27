@@ -67,6 +67,9 @@ public class SecurityConfig {
                             "/login/oauth2/code/**")
                     .permitAll()
 
+                    .requestMatchers(HttpMethod.GET, "/api/places/**")
+                    .permitAll()
+
                     // 모든 GET 요청 허용
                     .requestMatchers(HttpMethod.GET, "/**")
                     .permitAll()
