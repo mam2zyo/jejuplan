@@ -73,4 +73,4 @@ spring:
 
 ---
 
-필요에 따라 이 내용을 Notion, Wiki, Slack 문서 등으로 옮겨드릴 수도 있습니다.
+필요에 따라 이 내용을 Notion, Wiki, Slack 문서 등으로 옮겨드릴 수도 있
