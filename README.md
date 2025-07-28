@@ -1,6 +1,3 @@
-아래는 팀원들에게 전달할 수 있는 형식으로 정리한 문서입니다. **로컬 테스트 환경에서의 인증/인가 및 S3 설정**에 대한 내용을 포함하고 있습니다:
-
----
 
 ##  JejuTrip 프로젝트 - 로컬 테스트 환경 안내
 
@@ -60,21 +57,24 @@ public class S3BucketInitializer {
 * 버킷 이름은 `application-local.yml` 또는 `application.yml`의 다음 설정에서 정의됩니다:
 
 ```yaml
-spring:
   cloud:
     aws:
+      credentials:
+        access-key: your_aws_access_key
+        secret-key: your_aws_secret_key
+      region:
+        static: ap-northeast-2 # 서울 리전, 다른 선택지: us-east-1, eu-west-1 등
       s3:
-        bucket: your-bucket-name
+        bucket: jejutrip-bucket  # 현재 이 이름으로 초기화
+
 ```
 ---
 
-## 5. Postman 테스트 가이드
+### 5. Postman 테스트 가이드
 
 로컬 환경에서 API 테스트를 쉽게 진행할 수 있도록, 아래 Postman 요청 예시를 활용하세요.
 
-###  1) 사용자 인증 테스트
-
-#### 🔹 회원가입
+#### 회원가입
 
 `POST /api/auth/signup`
 
@@ -87,11 +87,9 @@ spring:
 }
 ```
 
-> 이미 생성된 테스트 계정을 사용하려면 다음 로그인 항목으로 진행하세요.
-
 ---
 
-#### 🔹 로그인
+#### 로그인
 
 `POST /api/auth/login`
 
@@ -122,7 +120,7 @@ Postman 설정:
 
 ---
 
-### 2) 게시글 등록 테스트
+### 게시글 등록 테스트
 
 `POST /api/board/post`
 
@@ -137,7 +135,7 @@ Postman 설정:
 
 | Key                   | Value                    | Content-type     |
 |-----------------------| ---------------------------- |------------------|
-| `postRequest`  Text   | 아래 JSON을 입력 (type: **Text**) | application/json |
+| `postRequest`    Text | 아래 JSON을 입력 | application/json |
 | `multipartFiles` File | 첨부할 이미지 파일 (여러 개 가능)         |                  |
 
 #### `postRequest` 예시:
