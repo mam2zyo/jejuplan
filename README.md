@@ -74,21 +74,6 @@ public class S3BucketInitializer {
 
 로컬 환경에서 API 테스트를 쉽게 진행할 수 있도록, 아래 Postman 요청 예시를 활용하세요.
 
-#### 회원가입
-
-`POST /api/auth/signup`
-
-예시 (필요 시 새로운 계정 생성용):
-
-```json
-{
-  "email": "newuser@example.com",
-  "password": "newuser#1234"
-}
-```
-
----
-
 #### 로그인
 
 `POST /api/auth/login`
@@ -97,7 +82,6 @@ Postman 설정:
 
 * **URL**: `http://localhost:8080/api/auth/login`
 * **Method**: `POST`
-* **Headers**: `Content-Type: application/json`
 * **Body** → `raw` → `JSON`
 
 #####  관리자 계정 (ROLE: MANAGER)
@@ -128,7 +112,6 @@ Postman 설정:
 
 * **Method**: `POST`
 * **URL**: `http://localhost:8080/api/board/post`
-* **Authorization**: Bearer 토큰 (로그인 후 응답값 참조)
 * **Body** → `form-data` 선택
 
 #### 📌 form-data 구성:
