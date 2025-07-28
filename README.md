@@ -66,5 +66,90 @@ spring:
       s3:
         bucket: your-bucket-name
 ```
+---
 
+## 5. Postman 테스트 가이드
+
+로컬 환경에서 API 테스트를 쉽게 진행할 수 있도록, 아래 Postman 요청 예시를 활용하세요.
+
+###  1) 사용자 인증 테스트
+
+#### 🔹 회원가입
+
+`POST /api/auth/signup`
+
+예시 (필요 시 새로운 계정 생성용):
+
+```json
+{
+  "email": "newuser@example.com",
+  "password": "newuser#1234"
+}
+```
+
+> 이미 생성된 테스트 계정을 사용하려면 다음 로그인 항목으로 진행하세요.
+
+---
+
+#### 🔹 로그인
+
+`POST /api/auth/login`
+
+Postman 설정:
+
+* **URL**: `http://localhost:8080/api/auth/login`
+* **Method**: `POST`
+* **Headers**: `Content-Type: application/json`
+* **Body** → `raw` → `JSON`
+
+#####  관리자 계정 (ROLE: MANAGER)
+
+```json
+{
+  "email": "codecraft@example.com",
+  "password": "code1234"
+}
+```
+
+#####  일반 사용자 계정 (ROLE: USER)
+
+```json
+{
+  "email": "hello@google.com",
+  "password": "jejutrip#2025"
+}
+```
+
+---
+
+### 2) 게시글 등록 테스트
+
+`POST /api/board/post`
+
+Postman 설정:
+
+* **Method**: `POST`
+* **URL**: `http://localhost:8080/api/board/post`
+* **Authorization**: Bearer 토큰 (로그인 후 응답값 참조)
+* **Body** → `form-data` 선택
+
+#### 📌 form-data 구성:
+
+| Key                   | Value                    | Content-type     |
+|-----------------------| ---------------------------- |------------------|
+| `postRequest`  Text   | 아래 JSON을 입력 (type: **Text**) | application/json |
+| `multipartFiles` File | 첨부할 이미지 파일 (여러 개 가능)         |                  |
+
+#### `postRequest` 예시:
+
+```json
+{
+  "title": "포스트맨의 고뇌",
+  "content": "아... 배달할 곳은 많고, 시간은 없고, 어쩌냐?",
+  "tags": ["spring", "postman", "test"],
+  "blockComment": true,
+  "privatePost": false,
+  "deletedFileIds": [10, 15]
+}
+```
 ---
