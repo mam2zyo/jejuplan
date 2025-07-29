@@ -10,7 +10,7 @@ import net.codecraft.jejutrip.tour.place.domain.Place;
 @Entity
 @Getter
 @NoArgsConstructor
-public class Review {
+public class Review extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,19 +18,23 @@ public class Review {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private User user;
+    private User reviewer;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "place_id")
     private Place place;
 
     @Column(nullable = false)
+    private int rating;
+
+    @Column(nullable = false)
     private String content;
 
     @Builder
-    public Review(User user, Place place, String content) {
-        this.user = user;
+    public Review(User reviewer, Place place, int rating, String content) {
+        this.reviewer = reviewer;
         this.place = place;
+        this.rating = rating;
         this.content = content;
     }
 }

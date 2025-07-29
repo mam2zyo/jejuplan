@@ -3,20 +3,25 @@ package net.codecraft.jejutrip.tour.place.dto;
 import lombok.Getter;
 import net.codecraft.jejutrip.tour.place.domain.Place;
 import net.codecraft.jejutrip.tour.place.domain.PlaceType;
+import net.codecraft.jejutrip.tour.review.domain.Review;
+import net.codecraft.jejutrip.tour.review.dto.ReviewResponse;
+
+import java.util.List;
 
 @Getter
 public class PlaceResponse {
-    private final Long id;
-    private final String title;
-    private final PlaceType placeType;
-    private final String introduction;
-    private final String address;
-    private final String phoneNumber;
-    private final double latitude;
-    private final double longitude;
-    private final String allTag;
-    private final String imgPath;
-    private final String thumbnailPath;
+    private Long id;
+    private String title;
+    private PlaceType placeType;
+    private String introduction;
+    private String address;
+    private String phoneNumber;
+    private double latitude;
+    private double longitude;
+    private String allTag;
+    private String imgPath;
+    private String thumbnailPath;
+    private List<ReviewResponse> reviews;
 
     public PlaceResponse(Place place) {
         this.id = place.getId();
@@ -30,5 +35,8 @@ public class PlaceResponse {
         this.allTag = place.getAllTag();
         this.imgPath = place.getImgPath();
         this.thumbnailPath = place.getThumbnailPath();
+        this.reviews = place.getReviews().stream()
+                .map(review -> new ReviewResponse(review))
+                .toList();
     }
 }

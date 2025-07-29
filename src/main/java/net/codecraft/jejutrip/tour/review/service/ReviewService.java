@@ -21,20 +21,21 @@ public class ReviewService {
     private final PlaceRepository placeRepository;
 
     @Transactional
-    public Long createReview(Long placeId, ReviewRequest request, String email) {
-        User user = userRepository.findByEmail(email)
+    public Review createReview(Long placeId, ReviewRequest request, String email) {
+        User reviewer = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다. email=" + email));
         Place place = placeRepository.findById(placeId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 장소를 찾을 수 없습니다. id=" + placeId));
 
         Review review = Review.builder()
-                .user(user)
+                .reviewer(reviewer)
                 .place(place)
+                .rating(request.getRating())
                 .content(request.getContent())
                 .build();
 
         reviewRepository.save(review);
 
-        return review.getId();
+        return review;
     }
 }
