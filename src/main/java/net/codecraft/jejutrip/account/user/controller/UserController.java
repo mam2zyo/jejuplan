@@ -72,7 +72,7 @@ public class UserController {
         if (principal == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not Logged In");
         }
-        return ResponseEntity.ok("로그인된 사용자: " + principal.getName());
+        return ResponseEntity.ok(principal.getName());
     }
 
     @DeleteMapping(value = "/users/me")

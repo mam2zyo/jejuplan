@@ -7,6 +7,7 @@ import net.codecraft.jejutrip.tour.batch.dto.VisitJejuItem;
 import net.codecraft.jejutrip.tour.place.domain.Place;
 import net.codecraft.jejutrip.tour.place.repository.PlaceRepository;
 import net.codecraft.jejutrip.tour.batch.mapper.PlaceMapper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,35 +28,10 @@ public class PlaceDataSyncService {
     private final PlaceMapper placeMapper;
 
     /**
-     * DB에 존재하지 않는 새로운 장소 정보만 생성합니다. (초기 데이터 적재용)
-     */
-    @Transactional
-    public void createPlaces() {
-        log.info("Starting initial data creation process...");
-        List<VisitJejuItem> allItems = apiClient.fetchAllItems();
-
-        Set<String> existingIds = placeRepository.findAll()
-                .stream()
-                .map(Place::getContentsid)
-                .collect(Collectors.toSet());
-
-        List<Place> newPlaces = allItems.stream()
-                .filter(item -> !existingIds.contains(item.getContentsid()))
-                .map(placeMapper::toEntity)
-                .collect(Collectors.toList());
-
-        if (!newPlaces.isEmpty()) {
-            placeRepository.saveAll(newPlaces);
-            log.info("{} new places have been saved.", newPlaces.size());
-        } else {
-            log.info("No new places to save.");
-        }
-    }
-
-    /**
      * DB에 존재하는 데이터는 업데이트하고, 존재하지 않는 데이터는 새로 생성합니다. (주기적인 동기화용)
      */
 
+    @Async
     @Transactional
     public void synchronizePlaces() {
         log.info("Starting data synchronization (upsert) process...");
@@ -92,5 +68,4 @@ public class PlaceDataSyncService {
             log.info("No data to synchronize.");
         }
     }
-
 }

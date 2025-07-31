@@ -23,7 +23,7 @@ public class ReviewController {
     // 특정 장소에 리뷰 작성
     @PostMapping
     public ResponseEntity<ReviewResponse> createReview(@PathVariable Long placeId,
-                                                       @RequestBody ReviewRequest requestDto,
+                                                       @RequestBody ReviewRequest request,
                                                        @AuthenticationPrincipal UserDetails userDetails) {
 
         if (userDetails == null) {
@@ -31,7 +31,7 @@ public class ReviewController {
         }
 
         String email = userDetails.getUsername();
-        Review review = reviewService.createReview(placeId, requestDto, email);
+        Review review = reviewService.createReview(placeId, request, email);
         ReviewResponse newReview = new ReviewResponse(review);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(newReview);

@@ -7,6 +7,7 @@ import net.codecraft.jejutrip.tour.place.domain.Place;
 import net.codecraft.jejutrip.tour.place.repository.PlaceRepository;
 import net.codecraft.jejutrip.tour.review.domain.Review;
 import net.codecraft.jejutrip.tour.review.dto.ReviewRequest;
+import net.codecraft.jejutrip.tour.review.dto.ReviewResponse;
 import net.codecraft.jejutrip.tour.review.repository.ReviewRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,5 +38,9 @@ public class ReviewService {
         reviewRepository.save(review);
 
         return review;
+    }
+
+    public ReviewResponse updateReview(Long reviewId, ReviewRequest request, String email) {
+        return null;
     }
 }

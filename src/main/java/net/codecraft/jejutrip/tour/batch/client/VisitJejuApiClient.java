@@ -1,14 +1,11 @@
 package net.codecraft.jejutrip.tour.batch.client;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import net.codecraft.jejutrip.tour.batch.dto.VisitJejuApiResponse;
 import net.codecraft.jejutrip.tour.batch.dto.VisitJejuItem;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -36,9 +33,6 @@ public class VisitJejuApiClient {
         this.objectMapper = objectMapper;
         this.apiUrl = apiUrl;
         this.apiKey = apiKey;
-
-        System.out.println("API URL is: " + this.apiUrl);
-        System.out.println("API Key is: " + this.apiKey);
     }
 
     public List<VisitJejuItem> fetchAllItems() {
