@@ -22,7 +22,7 @@ public class ReviewService {
     private final PlaceRepository placeRepository;
 
     @Transactional
-    public Review createReview(Long placeId, ReviewRequest request, String email) {
+    public ReviewResponse createReview(Long placeId, ReviewRequest request, String email) {
         User reviewer = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다. email=" + email));
         Place place = placeRepository.findById(placeId)
@@ -36,11 +36,40 @@ public class ReviewService {
                 .build();
 
         reviewRepository.save(review);
-
-        return review;
+        return new ReviewResponse(review);
     }
 
-    public ReviewResponse updateReview(Long reviewId, ReviewRequest request, String email) {
-        return null;
+    public ReviewResponse updateReview(Long placeId, Long reviewId, ReviewRequest request, String email) {
+
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() ->
+                        new IllegalArgumentException("리뷰를 찾을 수 없습니다. id=" + reviewId)
+                );
+        if (!review.getReviewer().getEmail().equals(email)) {
+            throw new IllegalArgumentException("리뷰를 수정할 권한이 없습니다.");
+        }
+        if (!review.getPlace().getId().equals(placeId)) {
+            throw new IllegalArgumentException("URL의 장소 정보가 일치하지 않습니다.");
+        }
+
+        review.update(request.getRating(), request.getContent());
+        return new ReviewResponse(review);
     }
+
+    public void deleteReview(Long reviewId, Long placeId, String email) {
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() ->
+                        new IllegalArgumentException("리뷰를 찾을 수 없습니다. id=" + reviewId)
+                );
+        if (!review.getReviewer().getEmail().equals(email)) {
+            throw new IllegalArgumentException("리뷰를 삭제할 권한이 없습니다.");
+        }
+        if (!review.getPlace().getId().equals(placeId)) {
+            throw new IllegalArgumentException("URL의 장소 정보가 일치하지 않습니다.");
+        }
+
+        reviewRepository.delete(review);
+    }
+
+
 }

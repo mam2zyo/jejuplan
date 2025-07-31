@@ -30,6 +30,11 @@ public class Review extends BaseTimeEntity {
     @Column(nullable = false)
     private String content;
 
+    public void update(int rating, String content) {
+        this.rating = rating;
+        this.content = content;
+    }
+
     @Builder
     public Review(User reviewer, Place place, int rating, String content) {
         this.reviewer = reviewer;

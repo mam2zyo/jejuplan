@@ -31,9 +31,40 @@ public class ReviewController {
         }
 
         String email = userDetails.getUsername();
-        Review review = reviewService.createReview(placeId, request, email);
-        ReviewResponse newReview = new ReviewResponse(review);
+        ReviewResponse newReview = reviewService.createReview(placeId, request, email);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(newReview);
+    }
+
+    @PutMapping("/{reviewId}")
+    public ResponseEntity<ReviewResponse> updateReview(
+            @PathVariable Long placeId,
+            @PathVariable Long reviewId,
+            @RequestBody ReviewRequest request,
+            @AuthenticationPrincipal UserDetails userDetails) {
+
+        if (userDetails == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        String email = userDetails.getUsername();
+
+        ReviewResponse updatedReview = reviewService.updateReview(placeId, reviewId, request, email);
+
+        return ResponseEntity.status(HttpStatus.OK).body(updatedReview);
+    }
+
+    @DeleteMapping("/{reviewId}")
+    public ResponseEntity<Void> deleteReview(
+            @PathVariable Long placeId,
+            @PathVariable Long reviewId,
+            @AuthenticationPrincipal UserDetails userDetails) {
+
+        if (userDetails == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        String email = userDetails.getUsername();
+        reviewService.deleteReview(placeId, reviewId, email);
+
+        return ResponseEntity.noContent().build();
     }
 }
